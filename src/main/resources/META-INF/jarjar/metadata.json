@@ -1,0 +1,11 @@
+{
+  "jars": [{
+    "identifier": {
+      "group": "com.github.bawnorton.mixinsquared",
+      "artifact": "mixinsquared-neoforge"
+    },
+    "version": { "range": "[0.3.8,)", "artifactVersion": "0.3.8" },
+    "path": "META-INF/jarjar/mixinsquared-neoforge-0.3.8.jar",
+    "isObfuscated": false
+  }]
+}

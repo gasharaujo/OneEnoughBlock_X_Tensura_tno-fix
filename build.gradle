@@ -1,0 +1,66 @@
+plugins { id 'java-library' }
+group = 'io.github.gasharaujo'
+version = '1.0.0'
+base { archivesName = 'oneenoughblock-tensura-tno-fix' }
+java { toolchain { languageVersion = JavaLanguageVersion.of(21) }; withSourcesJar() }
+repositories {
+    mavenCentral()
+    maven { url = 'https://libraries.minecraft.net/' }
+    maven { url = 'https://maven.neoforged.net/releases' }
+    maven { url = 'https://maven.fabricmc.net/' }
+    maven { url = 'https://maven.bawnorton.com/releases' }
+}
+configurations { embedded }
+dependencies {
+    compileOnly 'net.neoforged.fancymodloader:loader:4.0.45'
+    compileOnly 'net.fabricmc:sponge-mixin:0.16.4+mixin.0.8.7'
+    compileOnly 'org.ow2.asm:asm-tree:9.8'
+    compileOnly 'com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.8'
+    embedded('com.github.bawnorton.mixinsquared:mixinsquared-neoforge:0.3.8') { transitive = false }
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.14.1'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'net.fabricmc:sponge-mixin:0.16.4+mixin.0.8.7'
+    testImplementation 'org.ow2.asm:asm-tree:9.8'
+    testImplementation 'com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.8'
+    testImplementation 'com.google.code.gson:gson:2.11.0'
+    testImplementation 'com.google.guava:guava:33.3.1-jre'
+    if (project.hasProperty('tensuraJar')) { testRuntimeOnly files(project.property('tensuraJar')) }
+}
+tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8'; options.release = 21; options.compilerArgs += '-proc:none' }
+tasks.named('processResources') { inputs.property('version', project.version); filesMatching('META-INF/neoforge.mods.toml') { expand(version: project.version) } }
+tasks.named('jar', Jar) {
+    from(configurations.embedded) { into 'META-INF/jarjar' }
+    manifest { attributes('Implementation-Title': 'OneEnoughBlock X Tensura TNO Fix', 'Implementation-Version': project.version, 'Implementation-Vendor': 'gasharaujo', 'MixinConfigs': 'oneenoughblock_tensura_tno_fix.mixins.json') }
+}
+tasks.named('test') {
+    useJUnitPlatform()
+    if (project.hasProperty('tensuraJar')) { systemProperty 'tensuraJar', project.property('tensuraJar') }
+    if (project.hasProperty('oneEnoughBlockJar')) { systemProperty 'oneEnoughBlockJar', project.property('oneEnoughBlockJar') }
+    testLogging { events 'passed', 'skipped', 'failed' }
+}
+
+
+
+if (project.hasProperty('oneEnoughBlockJar')) {
+    dependencies { testRuntimeOnly files(project.property('oneEnoughBlockJar')) }
+}
+if (project.hasProperty('minecraftJar')) {
+    dependencies { testRuntimeOnly files(project.property('minecraftJar')) }
+}
+if (project.hasProperty('tensuraJar') && project.hasProperty('oneEnoughBlockJar') && project.hasProperty('minecraftJar')) {
+    ['OriginalMixinCrash': 'original', 'FixedMixin': 'fixed'].each { suffix, mode ->
+        def verification = tasks.register("verify${suffix}", JavaExec) {
+            dependsOn testClasses
+            classpath = sourceSets.test.runtimeClasspath
+            mainClass = 'io.github.gasharaujo.oneenoughfix.harness.MixinRegressionHarness'
+            args mode
+        }
+        tasks.named('check') { dependsOn verification }
+    }
+}
+
+tasks.withType(AbstractArchiveTask).configureEach {
+    preserveFileTimestamps = false
+    reproducibleFileOrder = true
+}
+tasks.named('jar', Jar) { from('LICENSE') }
