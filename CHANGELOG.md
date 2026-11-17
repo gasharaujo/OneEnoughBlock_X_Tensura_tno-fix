@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.1
+
+- Corrige o crash na preparação do mixin causado por solicitar bytecode não transformado, uma operação não suportada pelo ModLauncher.
+- Usa a API padrão do provedor de bytecode para inspecionar a compatibilidade.
+- O harness de regressão agora rejeita leituras não transformadas, reproduzindo essa restrição real da plataforma.
+- Autor e dependências sem limite máximo permanecem iguais.
+
 ## 1.0.0
 
 - Restringe o injector antigo de tags do TNO ao descritor completo de dois argumentos.

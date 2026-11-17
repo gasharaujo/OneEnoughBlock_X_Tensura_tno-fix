@@ -46,6 +46,11 @@ public final class TestMixinService extends MixinServiceAbstract
     }
     @Override public ClassNode getClassNode(String name, boolean transformers, int flags)
             throws ClassNotFoundException, IOException {
+        // Match the real ModLauncher service: raw bytecode retrieval is unsupported.
+        if (!transformers) {
+            throw new IllegalArgumentException(
+                    "ModLauncher service does not currently support retrieval of untransformed bytecode");
+        }
         try (InputStream stream = getResourceAsStream(name.replace('.', '/') + ".class")) {
             if (stream == null) throw new ClassNotFoundException(name);
             ClassNode node = new ClassNode();

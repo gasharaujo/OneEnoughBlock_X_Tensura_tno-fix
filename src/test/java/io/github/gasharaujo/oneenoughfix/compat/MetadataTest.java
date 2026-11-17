@@ -12,7 +12,7 @@ class MetadataTest {
             metadata = new String(stream.readAllBytes(), StandardCharsets.UTF_8);
         }
         assertTrue(metadata.contains("authors=\"gasharaujo\""));
-        assertTrue(metadata.contains("version=\"1.0.0\""));
+        assertTrue(metadata.contains("version=\"1.0.1\""));
         String[] dependencies = metadata.split("\\[\\[dependencies\\.");
         assertEquals(5, dependencies.length);
         for (int index = 1; index < dependencies.length; index++) {

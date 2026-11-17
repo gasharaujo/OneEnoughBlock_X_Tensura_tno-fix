@@ -24,9 +24,10 @@ public final class FixMixinPlugin implements IMixinConfigPlugin {
         if (!Compatibility.TARGET.equals(targetClassName)) return false;
         try {
             var bytecode = MixinService.getService().getBytecodeProvider();
+            // The default API requests transformed metadata, which ModLauncher supports.
             return Compatibility.needsModernAdapter(
-                    bytecode.getClassNode(targetClassName, false),
-                    bytecode.getClassNode(Compatibility.ORIGINAL_MIXIN, false));
+                    bytecode.getClassNode(targetClassName),
+                    bytecode.getClassNode(Compatibility.ORIGINAL_MIXIN));
         } catch (ClassNotFoundException exception) {
             return false; // A future TNO version may remove or rename the old mixin.
         } catch (IOException exception) {

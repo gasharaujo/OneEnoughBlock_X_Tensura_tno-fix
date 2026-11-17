@@ -9,7 +9,7 @@ Corrige o crash `Invalid descriptor` do mixin
 ## Instalação
 
 1. Mantenha OneEnoughBlock, OneEnoughItem, Tensura TNO e as dependências normais deles.
-2. Coloque `oneenoughblock-tensura-tno-fix-1.0.0.jar` na pasta `mods`.
+2. Coloque `oneenoughblock-tensura-tno-fix-1.0.1.jar` na pasta `mods`.
 3. Reinicie o jogo. Em servidores, instale a correção também no servidor.
 
 MixinSquared 0.3.8 está incluído no JAR; não é necessário baixá-lo separadamente.
@@ -43,7 +43,7 @@ Requer JDK 21. O Gradle Wrapper baixa as dependências públicas.
 .\gradlew.bat clean build
 ```
 
-Saída: `build/libs/oneenoughblock-tensura-tno-fix-1.0.0.jar`.
+Saída: `build/libs/oneenoughblock-tensura-tno-fix-1.0.1.jar`.
 O projeto não precisa dos JARs proprietários dos mods para compilar.
 
 Para executar também a regressão contra os JARs instalados:
@@ -75,3 +75,7 @@ O harness usa os arquivos originais como dados e aplica o motor Sponge Mixin rea
 Ele exige que a execução sem correção reproduza o erro de assinatura e que a execução
 corrigida tenha sucesso, mantendo os handlers originais do TNO e o adapter moderno.
 Essa verificação não abre o jogo nem carrega ou altera mundos.
+
+## Teste no modpack
+
+A versão **1.0.1** foi validada na instância real **Tensura Neo Otherworld 1.1.3c**, incluindo abertura do menu, criação e entrada no mundo. Veja [VALIDATION.md](VALIDATION.md) para o escopo e as versões testadas.
